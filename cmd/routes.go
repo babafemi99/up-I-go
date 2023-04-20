@@ -80,17 +80,13 @@ func HandleDownload(w http.ResponseWriter, r *http.Request) {
 	directory := filepath.Join("files", name)
 
 	// open file (check if exists)
-	ff, err := os.Open(directory)
+	_, err := os.Open(directory)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println(err)
 		json.NewEncoder(w).Encode("Unable to open file ")
 		return
 	}
-
-	// get file extension
-	fileExtension := strings.ToLower(filepath.Ext(ff.Name()))
-	log.Println(fileExtension)
 
 	// force a download with the content- disposition field
 	w.Header().Set("Content-Disposition", "attachment; filename="+filepath.Base(directory))
